@@ -2,6 +2,7 @@ package queue.common.repository;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import queue.common.model.Job;
 
 @Repository
-public interface JobRepository extends CrudRepository<Job, UUID> {
+public interface JobRepository extends CrudRepository<Job, UUID>, JpaSpecificationExecutor {
 
   List<Job> findByStateAndReservedByAndNextExecutedAtLessThanEqual(String state, String reservedBy, Date nextExecutedAt);
 
@@ -18,4 +19,5 @@ public interface JobRepository extends CrudRepository<Job, UUID> {
   @Modifying
   @Query("UPDATE Job j SET j.reservedBy = :workerId WHERE j.id = :jobId AND j.reservedBy IS NULL")
    int updateReservedByForJob(String jobId, String workerId);
+
 }

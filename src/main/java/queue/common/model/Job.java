@@ -1,6 +1,8 @@
 package queue.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -84,5 +86,13 @@ public class Job{
     this.state="waiting";
   }
 
+  public void setUp(JobOptions options) throws JsonProcessingException {
+
+    if(jobOptions.getAt()!= null){
+      this.nextExecutedAt= jobOptions.getAt();
+    }else {
+      this.nextExecutedAt = new Date(new Date().getTime() + jobOptions.getWait() * 60 * 1000);
+    }
+  }
 
 }
